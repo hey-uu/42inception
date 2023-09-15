@@ -1,0 +1,29 @@
+# These groups are read by MariaDB server.
+# Use it for options that only the server (but not clients) should see
+
+[mysqld]
+## general settings
+user					= mysql
+datadir 				= /var/lib/mysql
+socket					= /var/run/mysqld/mysqld.sock
+pid-file				= /var/run/mysqld/mysqld.pid
+port					= 3306
+
+## disables all remote access to the MySQL server.
+# skip-networking
+
+## listen on all available IP addresses on the server.
+bind-address			= 0.0.0.0
+
+## prevent assorted security risks by disabling the option.
+symbolic-links			= 0
+
+# log
+# general-log 			= 1
+# general-log-file 		= /var/log/mysql/general.log
+# log-error				= /var/log/mysql/error.log
+# slow-query-log			= 1
+# slow-query-log-file		= /var/log/mysql/slow.log
+
+# time zone
+default-time-zone		= Asia/Seoul

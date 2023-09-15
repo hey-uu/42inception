@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  nginx:
+    container_name: 'nginx'
+    image: 'nginx'
+    pull_policy: 'never'
+    build:  './requirements/nginx'
+    volumes:
+      - 'wordpress_data:/var/www/html:ro'
+    ports:
+      - '443:443'
+    networks: 
+      - 'docker-network'
+    depends_on:
+      - 'wordpress'
+    restart: 'on-failure'
+
+  wordpress:
+    container_name: 'wordpress'
+    image: 'wordpress'
+    pull_policy: 'never'
+    build: './requirements/wordpress'
+    volumes: 
+      - 'wordpress_data:/var/www/html'
+    env_file: 
+      - './.env'
+    networks: 
+      - 'docker-network'
+    depends_on: 
+      - 'mariadb'
+    restart: 'on-failure'
+
+  mariadb:
+    container_name: 'mariadb'
+    image: 'mariadb'
+    pull_policy: 'never' 
+    build: './requirements/mariadb'
+    volumes:
+      - 'mariadb_data:/var/lib/mysql'
+      # - './log/mariadb:/var/log/mysql'
+    env_file: 
+      - './.env'
+    networks: 
+      - 'docker-network'
+    restart: 'on-failure'
+
+volumes:
+  wordpress_data:
+    name: 'wordpress_data'
+    driver: 'local'
+    driver_opts:
+      type: none
+      device: '/home/admin/data/wordpress_data'
+      o: bind
+    # https://collabnix.com/how-to-mount-external-volumes-in-docker/
+  mariadb_data:
+    name: 'mariadb_data'
+    driver: 'local'
+    driver_opts:
+      type: none
+      device: '/home/admin/data/mariadb_data'
+      o: bind
+
+networks:
+  docker-network:
+    driver: 'bridge'
+    name: 'docker-network'
